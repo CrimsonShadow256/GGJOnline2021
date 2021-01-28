@@ -14,6 +14,8 @@ namespace GGJ_Online
 
         private Rigidbody rb;
         private Animator anim;
+        private float currentMaxSpeed;
+        private bool inFiringStance = false;
 
         private void Awake()
         {
@@ -23,15 +25,33 @@ namespace GGJ_Online
 
         void Update()
         {
-            Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical")) * maxSpeed;
+            if (!inFiringStance)
+                currentMaxSpeed = maxSpeed;
+            else
+                currentMaxSpeed = 1.0f;
+
+            Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical")) * currentMaxSpeed;
 
             Debug.Log(input);
             rb.velocity = Vector3.MoveTowards(rb.velocity, input, acceleration * Time.deltaTime);
             transform.LookAt(transform.position + input);
 
-            if (anim != null)
+            anim.SetFloat("Speed", rb.velocity.magnitude);
+
+            if (Input.GetKeyDown(KeyCode.Joystick1Button7) || Input.GetMouseButtonDown(0))
             {
-                anim.SetFloat("Speed", rb.velocity.magnitude);
+                anim.SetTrigger("Fire");
+            }
+
+            if(Input.GetKeyDown(KeyCode.Joystick1Button6) || Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                anim.SetBool("ReadyWeapon", true);
+                inFiringStance = true;
+            }
+            else if(Input.GetKeyUp(KeyCode.Joystick1Button6) || Input.GetKeyUp(KeyCode.LeftShift))
+            {
+                anim.SetBool("ReadyWeapon", false);
+                inFiringStance = false;
             }
         }
     }

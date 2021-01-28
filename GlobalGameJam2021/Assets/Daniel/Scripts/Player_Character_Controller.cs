@@ -7,6 +7,7 @@ public class Player_Character_Controller : MonoBehaviour
 {
     [Header("Movement Variables")]
     [Tooltip("Controls Move Speed")] [SerializeField] float moveSpeed = 3.5f;
+    [Tooltip("Controls Run Speed Modifier")] [SerializeField] float runModifier = 2.0f;
     bool hMove = false, jump = false, fMove = false;
     float forwardMovement;
 
@@ -15,12 +16,18 @@ public class Player_Character_Controller : MonoBehaviour
     enum CharacterState { Walk, Jump,Run, Idle, PistolAttack,Crash,HandAttack,WalkL,WalkR};
     [Header("Character State")]
     [Tooltip("Check or Change Character State")] [SerializeField] CharacterState currentState;
-
+    [Tooltip("Needed for Pitch Rotation")] [SerializeField] GameObject playerCamera;
     Animator pAnim;
+    
 
     [Header("Rotation Variables")]
     [Tooltip("Rotation speed")]float speedH = 2.0f;
+    [Tooltip("Pitch Rotation Speed")] float speedV = 2.0f;
     float yaw = 0.0f;
+    float pitch = 0.0f;
+
+    
+
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +49,7 @@ public class Player_Character_Controller : MonoBehaviour
     {
         if (fMove && Input.GetKey(KeyCode.LeftShift) && forwardMovement > 0.1f)
         {
-            transform.Translate(0, 0, (moveSpeed + 2.0f) * Time.fixedDeltaTime);
+            transform.Translate(0, 0, (moveSpeed + runModifier) * Time.fixedDeltaTime);
             currentState = CharacterState.Run;
 
         }
@@ -51,7 +58,9 @@ public class Player_Character_Controller : MonoBehaviour
     private void LookRotation()
     {
         yaw += speedH * Input.GetAxis("Mouse X");
-        transform.localEulerAngles = new Vector3(0.0f, yaw, 0.0f);
+        pitch -= speedV * Input.GetAxis("Mouse Y");
+        transform.localEulerAngles = new Vector3(0, yaw, 0.0f);
+        playerCamera.transform.localEulerAngles = new Vector3(pitch, 0.0f, 0.0f);
     }
 
     private void FourWayMovement()
@@ -85,12 +94,12 @@ public class Player_Character_Controller : MonoBehaviour
 
             if (horizontalMovement > 0.1f)
             {
-                transform.Translate(moveSpeed * Time.fixedDeltaTime, 0, 0);
+                transform.Translate(moveSpeed * Time.deltaTime, 0, 0);
                 currentState = CharacterState.WalkR;
             }
             else if (horizontalMovement < -0.1f)
             {
-                transform.Translate(-moveSpeed * Time.fixedDeltaTime, 0, 0);
+                transform.Translate(-moveSpeed * Time.deltaTime, 0, 0);
                 currentState = CharacterState.WalkL;
             }
             else
@@ -105,11 +114,11 @@ public class Player_Character_Controller : MonoBehaviour
 
             if (forwardMovement > 0.1f)
             {
-                transform.Translate(0, 0, moveSpeed * Time.fixedDeltaTime);
+                transform.Translate(0, 0, moveSpeed * Time.deltaTime);
             }
             else if (forwardMovement < -0.1f)
             {
-                transform.Translate(0, 0, -moveSpeed * Time.fixedDeltaTime);
+                transform.Translate(0, 0, -moveSpeed * Time.deltaTime);
             }
 
         }

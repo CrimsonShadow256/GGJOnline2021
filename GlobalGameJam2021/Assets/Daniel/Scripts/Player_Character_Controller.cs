@@ -21,11 +21,18 @@ public class Player_Character_Controller : MonoBehaviour
     
 
     [Header("Rotation Variables")]
-    [Tooltip("Rotation speed")]float speedH = 2.0f;
-    [Tooltip("Pitch Rotation Speed")] float speedV = 2.0f;
+    [Tooltip("Rotation speed")][SerializeField]float speedH = 2.0f;
+    [Tooltip("Pitch Rotation Speed")][SerializeField]float speedV = 2.0f;
     float yaw = 0.0f;
     float pitch = 0.0f;
 
+    bool armed = false;
+
+
+    [Header("Punching Variables")]
+    [Tooltip("Punch Cooldown")] [SerializeField] float punchCooldown = 2.0f;
+    float nextPunch;
+    bool hasPunched = false;
     
 
 
@@ -34,7 +41,11 @@ public class Player_Character_Controller : MonoBehaviour
     {
         Initializer();
     }
-
+    void Initializer()
+        {
+            pAnim = GetComponentInChildren<Animator>();
+            currentState = CharacterState.Idle;
+        }
     // Update is called once per frame
     void Update()
     {
@@ -42,7 +53,36 @@ public class Player_Character_Controller : MonoBehaviour
         FourWayMovement();
         LookRotation();
         RunningMovement();
+        RaiseWeapon();
+        PunchAttack();
+    }
 
+    private void PunchAttack()
+    {
+        if (Input.GetMouseButton(0) && !armed && Time.time > nextPunch)
+        {
+            nextPunch = Time.time + punchCooldown;
+            pAnim.SetTrigger("Punch");
+            hasPunched = true;
+        }
+        if (hasPunched)
+        {
+            currentState = CharacterState.HandAttack;
+        }
+    }
+
+    private void RaiseWeapon()
+    {
+        if (Input.GetKeyDown(KeyCode.E) && !armed)
+        {
+            armed = true;
+            pAnim.SetBool("Armed", true);
+        }
+        else if (Input.GetKeyDown(KeyCode.E) && armed)
+        {
+            armed = false;
+            pAnim.SetBool("Armed", false);
+        }
     }
 
     private void RunningMovement()
@@ -124,11 +164,7 @@ public class Player_Character_Controller : MonoBehaviour
         }
     }
 
-    void Initializer()
-    {
-        pAnim = GetComponentInChildren<Animator>();
-        currentState = CharacterState.Idle;
-    }
+    
     private void SwitchStatement()
     {
         switch (currentState)
@@ -222,7 +258,11 @@ public class Player_Character_Controller : MonoBehaviour
 
     private void HandAttack()
     {
-        
+        pAnim.SetBool("Run", false);
+        pAnim.SetBool("Walk", false);
+        pAnim.SetBool("WalkR", false);
+        pAnim.SetBool("WalkL", false);
+        hasPunched = false;
     }
 
     private void Crash()

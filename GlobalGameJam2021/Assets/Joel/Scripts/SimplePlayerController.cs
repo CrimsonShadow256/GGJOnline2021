@@ -13,10 +13,12 @@ namespace GGJ_Online
         [SerializeField] float acceleration = 5.0f;
 
         private Rigidbody rb;
+        private Animator anim;
 
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
+            anim = GetComponent<Animator>();
         }
 
         void Update()
@@ -26,6 +28,11 @@ namespace GGJ_Online
             Debug.Log(input);
             rb.velocity = Vector3.MoveTowards(rb.velocity, input, acceleration * Time.deltaTime);
             transform.LookAt(transform.position + input);
+
+            if (anim != null)
+            {
+                anim.SetFloat("Speed", rb.velocity.magnitude);
+            }
         }
     }
 }

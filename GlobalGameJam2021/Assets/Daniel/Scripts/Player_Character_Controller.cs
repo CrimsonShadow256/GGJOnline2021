@@ -8,12 +8,12 @@ public class Player_Character_Controller : MonoBehaviour
     [Header("Movement Variables")]
     [Tooltip("Controls Move Speed")] [SerializeField] float moveSpeed = 3.5f;
     [Tooltip("Controls Run Speed Modifier")] [SerializeField] float runModifier = 2.0f;
-    bool hMove = false, jump = false, fMove = false;
+    bool hMove = false, fMove = false;
     float forwardMovement;
 
 
 
-    enum CharacterState { Walk, Jump,Run, Idle, PistolAttack,Crash,HandAttack,WalkL,WalkR};
+    enum CharacterState { Walk, Run, Idle, PistolAttack,Crash,HandAttack,WalkL,WalkR};
     [Header("Character State")]
     [Tooltip("Check or Change Character State")] [SerializeField] CharacterState currentState;
     [Tooltip("Needed for Pitch Rotation")] [SerializeField] GameObject playerCamera;
@@ -38,7 +38,12 @@ public class Player_Character_Controller : MonoBehaviour
     float nextShot;
     bool hasPunched = false;
     bool hasShot = false;
-    
+
+    [Header("Jump Variables")]
+    [Tooltip("Line begins for grounding")] [SerializeField] Transform lineStartPos;
+    [Tooltip("Line ends for grounding")] [SerializeField] Transform lineStopPos;
+    [Tooltip("Needed for Anim Events, DO NOT CHANGE")]public bool jumping = false;
+   
 
 
     // Start is called before the first frame update
@@ -61,6 +66,33 @@ public class Player_Character_Controller : MonoBehaviour
         RaiseWeapon();
         PunchAttack();
         ShootPistol();
+        Jump();//NOT DONE YET
+    }
+
+    private void Jump()//NOT DONE YET
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded() && !jumping)
+        {
+
+            jumping = true;
+        }
+        if (jumping && isGrounded() == false)
+        {
+            pAnim.SetBool("Jump", true);
+        }
+        else
+        {
+            pAnim.SetBool("Jump", false);
+            jumping = false;
+        }
+    }
+
+    bool isGrounded()
+    {
+        bool isGrounded = Physics.Linecast(lineStartPos.position, lineStopPos.position);
+        Debug.DrawLine(lineStartPos.position, lineStopPos.position, Color.red);
+        return isGrounded;
+            
     }
 
     private void ShootPistol()
@@ -201,9 +233,6 @@ public class Player_Character_Controller : MonoBehaviour
                 Idle();
                 break;
 
-            case CharacterState.Jump:
-                Jump();
-                break;
 
             case CharacterState.PistolAttack:
                 PistolAttack();
@@ -271,11 +300,6 @@ public class Player_Character_Controller : MonoBehaviour
         hasShot = false;
     }
 
-    private void Jump()
-    {
-        
-    }
-
     private void Idle()
     {
         pAnim.SetBool("Run", false);
@@ -297,4 +321,5 @@ public class Player_Character_Controller : MonoBehaviour
     {
         
     }
+    
 }

@@ -42,7 +42,9 @@ public class Player_Character_Controller : MonoBehaviour
     [Header("Jump Variables")]
     [Tooltip("Line begins for grounding")] [SerializeField] Transform lineStartPos;
     [Tooltip("Line ends for grounding")] [SerializeField] Transform lineStopPos;
+    [Tooltip("Jump Force")] [SerializeField] float upwardForce;
     [Tooltip("Needed for Anim Events, DO NOT CHANGE")]public bool jumping = false;
+    Rigidbody pRigidbody;
    
 
 
@@ -54,6 +56,7 @@ public class Player_Character_Controller : MonoBehaviour
     void Initializer()
         {
             pAnim = GetComponentInChildren<Animator>();
+            pRigidbody = GetComponent<Rigidbody>();
             currentState = CharacterState.Idle;
         }
     // Update is called once per frame
@@ -66,30 +69,31 @@ public class Player_Character_Controller : MonoBehaviour
         RaiseWeapon();
         PunchAttack();
         ShootPistol();
-        Jump();//NOT DONE YET
+        Jump();
+        print(isGrounded());
     }
 
-    private void Jump()//NOT DONE YET
+    private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded() && !jumping)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded())
         {
-
-            jumping = true;
+            pRigidbody.AddForce(Vector3.up * upwardForce, ForceMode.VelocityChange);
+           
         }
-        if (jumping && isGrounded() == false)
+        if (isGrounded())
         {
-            pAnim.SetBool("Jump", true);
+            pAnim.SetBool("Jump", false);
         }
         else
         {
-            pAnim.SetBool("Jump", false);
-            jumping = false;
+            pAnim.SetBool("Jump", true);
         }
+       
     }
 
     bool isGrounded()
     {
-        bool isGrounded = Physics.Linecast(lineStartPos.position, lineStopPos.position);
+        bool isGrounded = Physics.Linecast(lineStartPos.position, lineStopPos.position,1<<LayerMask.NameToLayer("Ground"));
         Debug.DrawLine(lineStartPos.position, lineStopPos.position, Color.red);
         return isGrounded;
             

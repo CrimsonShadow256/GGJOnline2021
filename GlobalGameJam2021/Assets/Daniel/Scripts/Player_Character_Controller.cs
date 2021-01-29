@@ -36,13 +36,19 @@ public class Player_Character_Controller : MonoBehaviour
     [Header("Punching & Shooting Variables")]
     [Tooltip("Punch Cooldown in seconds")] [SerializeField] float punchCooldown = 2.0f;
     [Tooltip("Shot Cooldown in seconds")] [SerializeField] float shotCooldown = 1.0f;
-    [Tooltip("Siight in camera")] [SerializeField] GameObject sightInCamera;
+    [Tooltip("Sight in camera")] [SerializeField] GameObject sightInCamera;
+    [Tooltip("Bullet Spawn Position")] [SerializeField] Transform bulletSpawnPos;
+    [Tooltip("Bullet Projectile")] [SerializeField] GameObject bulletProjectile;
     float nextPunch;
     float nextShot;
     bool hasPunched = false;
     bool hasShot = false;
     bool aiming = false;
     bool armed = false;
+
+
+
+
 
     [Header("Jump Variables")]
     [Tooltip("Line begins for grounding")] [SerializeField] Transform lineStartPos;
@@ -73,7 +79,7 @@ public class Player_Character_Controller : MonoBehaviour
         DeathMethod();
         CrashMethod();
         GunFunctionality();
-
+       
     }
     #endregion
 
@@ -376,6 +382,7 @@ public class Player_Character_Controller : MonoBehaviour
     }
     private void GunFunctionality()
     {
+        bulletSpawnPos.transform.forward = this.gameObject.transform.forward;
         AimingHelper();
         AimingRotation();
         AimingInput();
@@ -385,8 +392,10 @@ public class Player_Character_Controller : MonoBehaviour
     {
             if (Input.GetMouseButton(0) && armed && Time.time > nextShot && aiming)
             {
+                
                 nextShot = Time.time + shotCooldown;
                 pAnim.SetTrigger("Shoot");
+                Instantiate(bulletProjectile, bulletSpawnPos.position, Quaternion.identity);
                 hasShot = true;
             }
             if (hasShot)

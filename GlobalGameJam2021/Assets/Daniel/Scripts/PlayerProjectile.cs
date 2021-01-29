@@ -6,10 +6,14 @@ public class PlayerProjectile : MonoBehaviour
 {
     [Tooltip("Bullet Speed")] [SerializeField] float projectileSpeed;
    
+    private void Start()
+    {
+      
+    }
 
     // Update is called once per frame
     void LateUpdate()
     {
-        transform.Translate(0, 0, projectileSpeed * Time.deltaTime);
+        transform.Translate(Vector3.forward * projectileSpeed * Time.deltaTime);
     }
 }

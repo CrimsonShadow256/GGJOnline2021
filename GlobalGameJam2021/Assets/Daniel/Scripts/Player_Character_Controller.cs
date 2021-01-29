@@ -395,7 +395,7 @@ public class Player_Character_Controller : MonoBehaviour
                 
                 nextShot = Time.time + shotCooldown;
                 pAnim.SetTrigger("Shoot");
-                Instantiate(bulletProjectile, bulletSpawnPos.position, Quaternion.identity);
+                Instantiate(bulletProjectile, bulletSpawnPos.position, this.gameObject.transform.rotation);
                 hasShot = true;
             }
             if (hasShot)

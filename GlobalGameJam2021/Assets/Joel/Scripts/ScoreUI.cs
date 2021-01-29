@@ -11,6 +11,8 @@ namespace GGJ_Online {
         [SerializeField] float pulseTime = 0.5f;
         [SerializeField] Color scoreIncreaseColor;
         [SerializeField] Color scoreDecreaseColor;
+        [SerializeField] TextMeshProUGUI popUpText;
+        [SerializeField] float popUpStartFontSize = 60.0f;
 
         private float defaultFontSize;
         private Color defaultFontColor;
@@ -26,28 +28,39 @@ namespace GGJ_Online {
             ScoreManager.ResetScore();
             ScoreManager.RegisterScoreChangeEvent(UpdateScoreDisplay);
 
-            SetTotalScoreText(0.0f);
+            totalScoreText.text = FormatScore(0.0f);
         }
 
         void UpdateScoreDisplay(float totalScore, float pointsAdded)
         {
-            SetTotalScoreText(totalScore);
-            StartCoroutine(PulseText(pointsAdded > 0.0f));
+            StartCoroutine(PulseText(totalScore, pointsAdded));
         }
 
-        private void SetTotalScoreText(float score)
+        private string FormatScore(float score)
         {
-            totalScoreText.text = "$ " + score.ToString("F2");
+            return ("$ " + score.ToString("F2"));
         }
 
-        IEnumerator PulseText(bool scoreIncreased)
+        IEnumerator PulseText(float totalScore, float pointsToAdd)
         {
-            if (scoreIncreased)
-                totalScoreText.color = scoreIncreaseColor;
-            else
-                totalScoreText.color = scoreDecreaseColor;
-
             float t = 0.0f;
+
+            if (pointsToAdd > Mathf.Epsilon)
+            {
+                popUpText.color = scoreIncreaseColor;
+                popUpText.text = "+ " + FormatScore(pointsToAdd);
+            }
+            else if (pointsToAdd < Mathf.Epsilon)
+            {
+                popUpText.color = scoreDecreaseColor;
+                popUpText.text = "- " + FormatScore(pointsToAdd);
+            }
+            else
+            {
+                t = 1.0f;
+            }
+
+
 
             while(t < 1.0f)
             {
@@ -56,17 +69,36 @@ namespace GGJ_Online {
                 if (t > 1.0f)
                     t = 1.0f;
 
-                InterpolateFontSize(t);
+                if (t >= 0.5f)
+                {
+                    totalScoreText.text = FormatScore(totalScore);
+                    InterpolateFontSize((t-0.5f)*2);
+                }
+
+                InterpolatePopUpFontSize(t);
                 yield return null;
             }
 
-            totalScoreText.color = defaultFontColor;
+            /*
+            if (totalScore > Mathf.Epsilon)
+                totalScoreText.color = scoreIncreaseColor;
+            else if (totalScore < Mathf.Epsilon)
+                totalScoreText.color = scoreDecreaseColor;
+            else
+                totalScoreText.color = defaultFontColor;
+            */
+            popUpText.text = "";
         }
 
         private void InterpolateFontSize(float t)
         {
             t = -4.0f*(t-0.5f)*(t-0.5f)+1; // Tweening function     y = -((x-0.5)*2)^2+1
             totalScoreText.fontSize = Mathf.Lerp(defaultFontSize, pulseFontSize, t);
+        }
+        private void InterpolatePopUpFontSize(float t)
+        {
+            t = (1 - t)*(1-t); // Tweening function
+            popUpText.fontSize = Mathf.Lerp(0.0f, popUpStartFontSize, t);
         }
     }
 }

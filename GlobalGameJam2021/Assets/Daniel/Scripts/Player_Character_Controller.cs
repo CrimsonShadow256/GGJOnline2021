@@ -17,7 +17,9 @@ public class Player_Character_Controller : MonoBehaviour
     [Header("Character State")]
     [Tooltip("Check or Change Character State")] [SerializeField] CharacterState currentState;
     [Tooltip("Needed for Pitch Rotation")] [SerializeField] GameObject playerCamera;
+    [Tooltip("Access to the mesh")][SerializeField]GameObject playerMesh;
     Animator pAnim;
+    
     
 
     [Header("Rotation Variables")]
@@ -29,10 +31,13 @@ public class Player_Character_Controller : MonoBehaviour
     bool armed = false;
 
 
-    [Header("Punching Variables")]
-    [Tooltip("Punch Cooldown")] [SerializeField] float punchCooldown = 2.0f;
+    [Header("Punching & Shooting Variables")]
+    [Tooltip("Punch Cooldown in seconds")] [SerializeField] float punchCooldown = 2.0f;
+    [Tooltip("Shot Cooldown in seconds")] [SerializeField] float shotCooldown = 1.0f;
     float nextPunch;
+    float nextShot;
     bool hasPunched = false;
+    bool hasShot = false;
     
 
 
@@ -55,6 +60,21 @@ public class Player_Character_Controller : MonoBehaviour
         RunningMovement();
         RaiseWeapon();
         PunchAttack();
+        ShootPistol();
+    }
+
+    private void ShootPistol()
+    {
+        if (Input.GetMouseButton(0) && armed && Time.time > nextShot)
+        {
+            nextShot = Time.time + shotCooldown;
+            pAnim.SetTrigger("Shoot");
+            hasShot = true;
+        }
+        if (hasShot)
+        {
+            currentState = CharacterState.PistolAttack;
+        }
     }
 
     private void PunchAttack()
@@ -240,7 +260,15 @@ public class Player_Character_Controller : MonoBehaviour
 
     private void PistolAttack()
     {
-        
+        pAnim.SetBool("Run", false);
+        pAnim.SetBool("Walk", false);
+        pAnim.SetBool("WalkR", false);
+        pAnim.SetBool("WalkL", false);
+        if(playerMesh.transform.localPosition.y != 0.03587782f)
+        {
+            playerMesh.transform.localPosition = new Vector3(0,0,0);
+        }
+        hasShot = false;
     }
 
     private void Jump()

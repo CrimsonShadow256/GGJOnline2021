@@ -10,6 +10,11 @@ public class PlayerProjectile : MonoBehaviour
     {
       
     }
+    private void Update()
+    {
+
+        Destroy(this.gameObject, 5.0f);
+    }
 
     // Update is called once per frame
     void LateUpdate()

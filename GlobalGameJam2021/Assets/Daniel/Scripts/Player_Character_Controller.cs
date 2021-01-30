@@ -60,6 +60,9 @@ public class Player_Character_Controller : MonoBehaviour
     [Header("Falling From Height Variables")]
     [Tooltip("Needed for Cross communication, DO NOT CHANGE")]public bool isCrashing = false;
 
+    [Header("Audio VAriables")]
+    [Tooltip("AudioClip for gun shot")] [SerializeField] AudioClip gunShot;
+
     #endregion
 
     #region Main Methods
@@ -399,6 +402,8 @@ public class Player_Character_Controller : MonoBehaviour
                 nextShot = Time.time + shotCooldown;
                 pAnim.SetTrigger("Shoot");
                 Instantiate(bulletProjectile, bulletSpawnPos.position, this.gameObject.transform.rotation);
+                AudioSource aSource = GetComponent<AudioSource>();
+                aSource.PlayOneShot(gunShot);
                 hasShot = true;
             }
             if (hasShot)

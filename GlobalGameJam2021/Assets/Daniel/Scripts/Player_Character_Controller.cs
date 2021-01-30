@@ -89,7 +89,7 @@ public class Player_Character_Controller : MonoBehaviour
     #region Helper Methods
     bool isGrounded()
         {
-            bool isGrounded = Physics.Linecast(lineStartPos.position, lineStopPos.position,1<<LayerMask.NameToLayer("Ground"));
+        bool isGrounded = Physics.Linecast(lineStartPos.position, lineStopPos.position);//,1<<LayerMask.NameToLayer("Ground"));
             Debug.DrawLine(lineStartPos.position, lineStopPos.position, Color.red);
             return isGrounded;
             

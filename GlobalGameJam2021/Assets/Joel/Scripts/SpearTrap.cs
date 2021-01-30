@@ -16,12 +16,20 @@ namespace GGJ_Online {
         [SerializeField] int pulsesInDownState = 3;
 
         [SerializeField] Transform spears;
+        [SerializeField] AudioClip extendSound;
+        [SerializeField] AudioClip retractSound;
+        [SerializeField] AudioClip enabledSound;
 
         const float upYPosition = 1.6f;
         const float downYPosition = 0.0f;
 
         float timeInState;
+        AudioSource audio;
 
+        private void Awake()
+        {
+            audio = GetComponent<AudioSource>();
+        }
         void Start()
         {
             timeInState = 0.0f;
@@ -47,9 +55,24 @@ namespace GGJ_Online {
         {
             timeInState = 0.0f;
             state = newState;
+
+            if (newState == SpearState.Extending)
+            {
+                audio.clip = extendSound;
+                audio.Play();
+            }
+            else if(newState == SpearState.Retracting)
+            {
+                audio.clip = retractSound;
+                audio.Play();
+            }
         }
         void EnableSpearTrap()
         {
+            audio.clip = enabledSound;
+            audio.Play();
+            trapIsEnabled = true;
+
             ChangeState(SpearState.Down);
         }
 
@@ -81,7 +104,7 @@ namespace GGJ_Online {
         }
         void RetractingState()
         {
-            float t = NormalizedTime(extendTime);
+            float t = NormalizedTime(retractTime);
             if (t >= 1.0f)
                 ChangeState(SpearState.Down);
 

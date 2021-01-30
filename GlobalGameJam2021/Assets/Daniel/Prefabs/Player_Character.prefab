@@ -40,13 +40,14 @@ GameObject:
   m_Component:
   - component: {fileID: 582782234}
   - component: {fileID: 582782236}
+  - component: {fileID: 8034645066065688452}
   m_Layer: 0
   m_Name: SightInCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &582782234
 Transform:
   m_ObjectHideFlags: 0
@@ -104,6 +105,14 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!81 &8034645066065688452
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 582782233}
+  m_Enabled: 1
 --- !u!1 &1544617746
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,7 +184,8 @@ GameObject:
   - component: {fileID: 4673742845810847525}
   - component: {fileID: 4673742845810847524}
   - component: {fileID: 443322902}
-  - component: {fileID: 443322905}
+  - component: {fileID: 8650875473299403282}
+  - component: {fileID: 7607894936791824941}
   m_Layer: 8
   m_Name: Player_Character
   m_TagString: Player
@@ -226,13 +236,14 @@ MonoBehaviour:
   shotCooldown: 1
   sightInCamera: {fileID: 582782233}
   bulletSpawnPos: {fileID: 246405477}
-  bulletProjectile: {fileID: 4277326840447507650, guid: f7193a5d1707e2242957f17d491ced69,
+  bulletProjectile: {fileID: 4277326840447507650, guid: 16b6917367112864295e1aecb9beaf34,
     type: 3}
   lineStartPos: {fileID: 1768415934}
   lineStopPos: {fileID: 1544617747}
   upwardForce: 7
   jumping: 0
   isCrashing: 0
+  gunShot: {fileID: 8300000, guid: c2c20019741d03546af9dc7b5cef8800, type: 3}
 --- !u!54 &443322902
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -249,8 +260,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
---- !u!135 &443322905
-SphereCollider:
+--- !u!136 &8650875473299403282
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -259,9 +270,106 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.3
+  m_Height: 1.8
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.92, z: 0}
+--- !u!82 &7607894936791824941
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4673742845810847531}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 0.672
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &4673742846551156414
 GameObject:
   m_ObjectHideFlags: 0

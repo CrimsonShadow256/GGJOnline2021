@@ -371,13 +371,16 @@ public class Player_Character_Controller : MonoBehaviour
     }
     void AimingInput()
     {
-        if (Input.GetMouseButton(1))
+        if (armed)
         {
-            aiming = true;
-        }
-        else
-        {
-            aiming = false;
+            if (Input.GetMouseButton(1))
+            {
+                aiming = true;
+            }
+            else
+            {
+                aiming = false;
+            }
         }
     }
     private void GunFunctionality()

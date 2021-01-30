@@ -134,7 +134,7 @@ public class Player_Character_Controller : MonoBehaviour
     }
     void AimingHelper()
     {
-        if (aiming)
+        if (armed)
         {
             playerCamera.SetActive(false);
             sightInCamera.SetActive(true);
@@ -207,12 +207,12 @@ public class Player_Character_Controller : MonoBehaviour
     }
     private void RaiseWeapon()
     {
-        if (Input.GetKeyDown(KeyCode.E) && !armed)
+        if (Input.GetMouseButton(1))
         {
             armed = true;
             pAnim.SetBool("Armed", true);
         }
-        else if (Input.GetKeyDown(KeyCode.E) && armed)
+        else
         {
             armed = false;
             pAnim.SetBool("Armed", false);

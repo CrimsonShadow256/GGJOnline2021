@@ -58,3 +58,7 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+<<<<<<< HEAD
+=======
+*.meta
+>>>>>>> parent of dda5971... Added metas back in

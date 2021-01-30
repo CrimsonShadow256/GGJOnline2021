@@ -21,4 +21,11 @@ public class PlayerProjectile : MonoBehaviour
     {
         transform.Translate(Vector3.forward * projectileSpeed * Time.deltaTime);
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Wall")
+        {
+            Destroy(this.gameObject);
+        }
+    }
 }

@@ -210,14 +210,31 @@ public class Player_Character_Controller : MonoBehaviour
         if (Input.GetMouseButton(1))
         {
             armed = true;
+            aiming = true;
             pAnim.SetBool("Armed", true);
         }
         else
         {
             armed = false;
+            aiming = false;
             pAnim.SetBool("Armed", false);
         }
     }
+    /*
+    void AimingInput()
+    {
+        if (armed)
+        {
+            if (Input.GetMouseButton(1))
+            {
+                aiming = true;
+            }
+            else
+            {
+                aiming = false;
+            }
+        }
+    }*/
     private void RunningMovement()
     {
         if (fMove && Input.GetKey(KeyCode.LeftShift) && forwardMovement > 0.1f)
@@ -372,26 +389,12 @@ public class Player_Character_Controller : MonoBehaviour
             transform.localEulerAngles = new Vector3(pitch, yaw, 0);
         }
     }
-    void AimingInput()
-    {
-        if (armed)
-        {
-            if (Input.GetMouseButton(1))
-            {
-                aiming = true;
-            }
-            else
-            {
-                aiming = false;
-            }
-        }
-    }
     private void GunFunctionality()
     {
         bulletSpawnPos.transform.forward = this.gameObject.transform.forward;
         AimingHelper();
         AimingRotation();
-        AimingInput();
+        //AimingInput();
         ShootPistol();
     }
     private void ShootPistol()

@@ -33,6 +33,9 @@ namespace GGJ_Online
 
         void TurnOnSwitch()
         {
+            if (isSwitchOn)
+                return;
+
             if (audioSource && switchOffSound)
                 audioSource.PlayOneShot(switchOnSound);
 

@@ -1,19 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace GGJ_Online
 {
-    public class ScoreManager
+    public class ScoreManager:MonoBehaviour
     {
         public delegate void ScoreChangeEvent(float totalScore, float pointsAdded);
 
         #region Private_Variables
-        private static ScoreChangeEvent scoreChanged;
+        private ScoreChangeEvent scoreChanged;
+        private static ScoreManager instance;
         private static float score;
         #endregion
 
         #region Public_Statics
+
+        private void Awake()
+        {
+            instance = this;
+        }
         public static void AddScore(float points)
         {
             score += points;
@@ -29,7 +36,7 @@ namespace GGJ_Online
         public static void RegisterScoreChangeEvent(ScoreChangeEvent eventFunction)
         {
             CheckAndInstantiateScoreChangeEvent();
-            scoreChanged += eventFunction;
+            instance.scoreChanged += eventFunction;
         }
 
         public static float GetScore()
@@ -39,9 +46,9 @@ namespace GGJ_Online
 
         private static void CheckAndInstantiateScoreChangeEvent()
         {
-            if (scoreChanged == null)
+            if (instance.scoreChanged == null)
             {
-                scoreChanged = new ScoreChangeEvent(DebugScore);
+                instance.scoreChanged = new ScoreChangeEvent(DebugScore);
             }
         }
         #endregion
@@ -50,7 +57,7 @@ namespace GGJ_Online
         private static void AlertListeners(float points)
         {
             CheckAndInstantiateScoreChangeEvent();
-            scoreChanged(score, points);
+            instance.scoreChanged(score, points);
         }
 
         private static void DebugScore(float totalScore, float pointsAdded)

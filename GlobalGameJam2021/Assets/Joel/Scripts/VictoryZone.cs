@@ -10,8 +10,6 @@ public class VictoryZone : MonoBehaviour
 
         if (pc)
         {
-            pc.isDead = true;
-
             GameManager gm = GameObject.FindObjectOfType<GameManager>();
             if (gm)
                 gm.Victory();

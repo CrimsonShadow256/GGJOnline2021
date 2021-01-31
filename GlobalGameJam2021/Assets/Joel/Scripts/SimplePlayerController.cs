@@ -25,34 +25,62 @@ namespace GGJ_Online
 
         void Update()
         {
-            if (!inFiringStance)
-                currentMaxSpeed = maxSpeed;
-            else
-                currentMaxSpeed = 1.0f;
+            Movement();
 
-            Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical")) * currentMaxSpeed;
-
-            Debug.Log(input);
-            rb.velocity = Vector3.MoveTowards(rb.velocity, input, acceleration * Time.deltaTime);
-            transform.LookAt(transform.position + input);
-
-            anim.SetFloat("Speed", rb.velocity.magnitude);
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                rb.AddForce(Vector3.up * 5.0f);
+            }
 
             if (Input.GetKeyDown(KeyCode.Joystick1Button7) || Input.GetMouseButtonDown(0))
             {
                 anim.SetTrigger("Fire");
             }
 
-            if(Input.GetKeyDown(KeyCode.Joystick1Button6) || Input.GetKeyDown(KeyCode.LeftShift))
+            if (Input.GetKeyDown(KeyCode.Joystick1Button6) || Input.GetKeyDown(KeyCode.LeftShift))
             {
                 anim.SetBool("ReadyWeapon", true);
                 inFiringStance = true;
             }
-            else if(Input.GetKeyUp(KeyCode.Joystick1Button6) || Input.GetKeyUp(KeyCode.LeftShift))
+            else if (Input.GetKeyUp(KeyCode.Joystick1Button6) || Input.GetKeyUp(KeyCode.LeftShift))
             {
                 anim.SetBool("ReadyWeapon", false);
                 inFiringStance = false;
             }
+        }
+
+        private void Movement()
+        {
+            if (!inFiringStance)
+                currentMaxSpeed = maxSpeed;
+            else
+                currentMaxSpeed = 1.0f;
+
+            Vector3 input = new Vector3(-Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical")) * currentMaxSpeed;
+            Vector3 camForward = Camera.main.transform.forward;
+            camForward.y = 0;
+            float rotationAngle = Vector3.Angle(Vector3.right, camForward);//Mathf.Cos(camForward.x / camForward.magnitude) * 180 / Mathf.PI;
+
+            if (camForward.z < 0.0f)
+            {
+                rotationAngle = 360 - rotationAngle;
+            }
+
+            input = Quaternion.AngleAxis(rotationAngle, Vector3.up) * input;
+            input.y = input.x;
+            input.x = input.z;
+            input.z = input.y;
+            input.y = 0.0f;
+
+            Debug.Log("Cam:" + camForward.normalized + " Input:" + input);
+
+            rb.velocity = Vector3.MoveTowards(rb.velocity, input, acceleration * Time.deltaTime);
+
+            // Stop Spinning if no input
+            if (input.sqrMagnitude > 0.01f)
+                transform.LookAt(transform.position + input);
+
+            anim.SetFloat("Speed", rb.velocity.magnitude);
         }
     }
 }

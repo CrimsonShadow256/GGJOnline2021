@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e03d83a971e9b949a01d595631297b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: 100
+  value: 10
   collectionEffect: {fileID: 0}
 --- !u!114 &4405886557708207071
 MonoBehaviour:

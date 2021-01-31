@@ -119,7 +119,7 @@ namespace GGJ_Online {
 
         void SetSpearPosition(float t)
         {
-            spears.localPosition = new Vector3(spears.position.x, Mathf.Lerp(downYPosition, upYPosition, t), spears.position.z);
+            spears.localPosition = new Vector3(spears.localPosition.x, Mathf.Lerp(downYPosition, upYPosition, t), spears.localPosition.z);
         }
     }
 }

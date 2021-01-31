@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] Image gameOverImage;
     [SerializeField] GameObject victoryScreen;
     [SerializeField] TextMeshProUGUI victoryText;
+    [SerializeField] AudioClip [] deathSounds;
+
+    private AudioSource audioSource;
 
     bool isGameOver = false;
     bool isVictory = false;
@@ -20,6 +23,8 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        audioSource = GetComponent<AudioSource>();
+
         gameOverFinalColor = gameOverImage.color;
         gameOverStartingColor = Color.clear;
 
@@ -31,6 +36,7 @@ public class GameManager : MonoBehaviour
     {
         isGameOver = true;
         fadeStartTime = Time.time;
+        PlayRandomDeathSound();
     }
 
     public void Victory()
@@ -82,5 +88,15 @@ public class GameManager : MonoBehaviour
 
         float t = (Time.time - fadeStartTime) / timeToFade;
         gameOverImage.color = Color.Lerp(gameOverStartingColor, gameOverFinalColor, t);
+    }
+
+    void PlayRandomDeathSound()
+    {
+        if (deathSounds == null)
+            return;
+
+        int randomNum = Random.Range(0, deathSounds.Length);
+        audioSource.clip = deathSounds[randomNum];
+        audioSource.Play();
     }
 }

@@ -32,6 +32,14 @@ public class GameManager : MonoBehaviour
         victoryScreen.SetActive(false);
 
     }
+    private void OnEnable()
+    {
+        Cursor.visible = false;
+    }
+    private void OnDisable()
+    {
+        Cursor.visible = true;
+    }
     public void GameOver()
     {
         isGameOver = true;

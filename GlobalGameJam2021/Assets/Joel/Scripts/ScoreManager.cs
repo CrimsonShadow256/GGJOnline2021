@@ -32,6 +32,11 @@ namespace GGJ_Online
             scoreChanged += eventFunction;
         }
 
+        public static float GetScore()
+        {
+            return score;
+        }
+
         private static void CheckAndInstantiateScoreChangeEvent()
         {
             if (scoreChanged == null)
